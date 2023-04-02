@@ -81,7 +81,7 @@ romzip="$(realpath $1)"
 romzipext="${romzip##*.}"
 PARTITIONS="boot init_boot"
 EXT4PARTITIONS="boot init_boot"
-OTHERPARTITIONS="tz.mbn:tz tz.img:tz modem.img:modem NON-HLOS:modem boot-verified.img:boot dtbo-verified.img:dtbo"
+OTHERPARTITIONS="boot-verified.img:boot"
 
 echo "Create Temp and out dir"
 outdir="$LOCALDIR/out"
@@ -366,7 +366,7 @@ elif [[ $(7z l -ba $romzip | grep "system-sign.img") ]]; then
             offset_high=$(printf "%d" $offset_high)
             offset=$((65536*${offset_high}+${offset_low}))
             dd if="$tmpdir/$file" of="$tmpdir/x.img" iflag=count_bytes,skip_bytes bs=8192 skip=64 count=$offset > /dev/null 2>&1
-        else # header with BFBF magic or another unknowed header 
+        else # header with BFBF magic or another unknowed header
             dd if="$tmpdir/$file" of="$tmpdir/x.img" bs=$((0x4040)) skip=1 > /dev/null 2>&1
         fi
         MAGIC=$(od -A n -X -j 0 -N 4 "$tmpdir/x.img" | sed 's/ //g')
